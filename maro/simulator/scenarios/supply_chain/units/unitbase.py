@@ -1,5 +1,12 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
+from __future__ import annotations
+
+import typing
+from typing import Optional, Union
+
+if typing.TYPE_CHECKING:
+    from maro.simulator.scenarios.supply_chain import ManufactureAction, ConsumerAction
 
 
 class UnitBase:
@@ -30,7 +37,7 @@ class UnitBase:
     world = None
 
     # Parent of this unit, it can be a facility or another unit.
-    parent: object = None
+    parent: Optional[UnitBase] = None
 
     # Child units, extended unit can add their own child as property, this is used as a collection.
     children: list = None
@@ -45,7 +52,7 @@ class UnitBase:
     data_model = None
 
     # Current action.
-    action: object = None
+    action: Optional[Union[ManufactureAction, ConsumerAction]] = None
 
     # Current unit configurations.
     config: dict = None
@@ -97,7 +104,7 @@ class UnitBase:
         if self.data_model is not None:
             self.data_model.set_id(self.id, self.facility.id)
 
-    def set_action(self, action: object):
+    def set_action(self, action: Union[ManufactureAction, ConsumerAction]):
         """Set action for this agent.
 
         Args:

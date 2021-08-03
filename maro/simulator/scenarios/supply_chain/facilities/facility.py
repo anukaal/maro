@@ -1,12 +1,17 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
+from __future__ import annotations
 
+import typing
 from abc import ABC
 from collections import defaultdict
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from maro.simulator.scenarios.supply_chain.easy_config import SkuInfo
 from maro.simulator.scenarios.supply_chain.units import DistributionUnit, ProductUnit, StorageUnit
+
+if typing.TYPE_CHECKING:
+    from maro.simulator.scenarios.supply_chain.datamodels.base import DataModelBase
 
 
 class FacilityBase(ABC):
@@ -36,10 +41,10 @@ class FacilityBase(ABC):
 
     # Upstream facilities.
     # Key is sku id, value is the list of product unit from upstream.
-    upstreams: Dict[int, List[ProductUnit]] = None
+    upstreams: Dict[int, List[FacilityBase]] = None
 
     # Down stream facilities, value same as upstreams.
-    downstreams: Dict[int, List[ProductUnit]] = None
+    downstreams: Dict[int, List[FacilityBase]] = None
 
     # Configuration of this facility.
     configs: dict = None
@@ -50,10 +55,14 @@ class FacilityBase(ABC):
     # Index of the data model node.
     data_model_index: int = 0
 
-    data_model: object = None
+    data_model: Optional[DataModelBase] = None
 
     # Children of this facility (valid units).
     children: list = None
+
+    # Facility's coordinates
+    x: int = None
+    y: int = None
 
     def __init__(self):
         self.upstreams = {}

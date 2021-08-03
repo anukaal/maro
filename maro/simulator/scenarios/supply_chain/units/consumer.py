@@ -1,13 +1,13 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
-
+from __future__ import annotations
 
 from collections import Counter, defaultdict
 
 from scipy.ndimage.interpolation import shift
 
-from .order import Order
 from .extendunitbase import ExtendUnitBase
+from .order import Order
 
 
 class ConsumerUnit(ExtendUnitBase):
