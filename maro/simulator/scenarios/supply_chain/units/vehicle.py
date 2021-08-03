@@ -74,8 +74,8 @@ class VehicleUnit(UnitBase):
         # Steps to destination.
         self.steps = (len(self.path) - 2) // vlt + 1
         dest_consumer = destination.products[product_id].consumer
-        if self.steps <= len(dest_consumer.pending_order_daily):
-            dest_consumer.pending_order_daily[self.steps - 1] += quantity
+        if self.steps < len(dest_consumer.pending_order_daily):
+            dest_consumer.pending_order_daily[self.steps] += quantity
 
         # We are waiting for product loading.
         self.location = 0
