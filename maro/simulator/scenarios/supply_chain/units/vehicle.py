@@ -67,7 +67,8 @@ class VehicleUnit(UnitBase):
 
         # Steps to destination.
         # self.steps = len(self.path) // vlt
-        self.steps = vlt
+        # self.steps = vlt
+        self.steps = (len(self.path) - 2) // vlt + 1
 
         # We are waiting for product loading.
         self.location = 0
@@ -167,9 +168,9 @@ class VehicleUnit(UnitBase):
                 self.try_unload()
 
             # Back to source if we unload all.
-            # if self.payload == 0:
-            self._reset_internal_states()
-            self._reset_data_model()
+            if self.payload == 0:
+                self._reset_internal_states()
+                self._reset_data_model()
 
         self.cost = self.payload * self.unit_transport_cost
 
