@@ -6,7 +6,7 @@ import typing
 from typing import Optional, Union
 
 if typing.TYPE_CHECKING:
-    from maro.simulator.scenarios.supply_chain import ManufactureAction, ConsumerAction
+    from maro.simulator.scenarios.supply_chain import ConsumerAction, ManufactureAction
 
 
 class UnitBase:
