@@ -33,15 +33,14 @@ def get_unit_name2id_mapping(env: Env) -> dict:
 
 def get_storage_status(env: Env, facility_info: dict) -> List:
     storage_nodes = env.snapshot_list["storage"]
-    storage_features = ("capacity", "remaining_space")
-    storage_unit = facility_info["units"]["storage"]
-    storage_index = storage_unit["node_index"]
-    storage_states = storage_nodes[env.frame_index:storage_index:storage_features].flatten().astype(np.int)
+    storage_index = facility_info["units"]["storage"]["node_index"]
+    storage_states = storage_nodes[env.frame_index:storage_index:("capacity", "remaining_space")]\
+        .flatten().astype(np.int)
 
     sku_list = storage_nodes[env.frame_index:storage_index:["product_list"]].flatten().astype(np.int)
     sku_num = storage_nodes[env.frame_index:storage_index:["product_number"]].flatten().astype(np.int)
 
-    return [storage_states[0], storage_states[1], dict(zip(sku_list, sku_num))]  # (total, remain, sku_detail)
+    return [storage_states[0], storage_states[1], dict(zip(sku_list, sku_num))]  # (capacity, remain, sku_detail)
 
 
 def get_manufacture_status(env: Env, facility_info: dict, sku_id: int) -> List:
@@ -60,16 +59,16 @@ def show_storage_status(env: Env) -> None:
     buff = {}
     sku_id_set = set([])
     for facility_id, facility_info in env.summary["node_mapping"]["facilities"].items():
-        total, remaining, sku_detail = get_storage_status(env, facility_info)
-        buff[(facility_id, facility_info["name"])] = (total, remaining, sku_detail)
+        capacity, remaining, sku_detail = get_storage_status(env, facility_info)
+        buff[(facility_id, facility_info["name"])] = (capacity, remaining, sku_detail)
         sku_id_set |= set(sku_detail.keys())
     sku_id_list = sorted(list(sku_id_set))
 
     print("  Storage summary:")
-    print("    {}{} / {}".format("[Facility]".ljust(16), "[remain]".rjust(8), "[total]".rjust(7)))
+    print("    {}{} / {}".format("[Facility]".ljust(16), "[remain]".rjust(8), "[capacity]".rjust(10)))
     for facility_id, facility_info in env.summary["node_mapping"]["facilities"].items():
-        total, remaining, _ = buff[(facility_id, facility_info["name"])]
-        print("    {}{:8d} / {:7d}".format(facility_info["name"].ljust(16), remaining, total))
+        capacity, remaining, _ = buff[(facility_id, facility_info["name"])]
+        print("    {}{:8d} / {:10d}".format(facility_info["name"].ljust(16), remaining, capacity))
 
     print("  Storage detail:")
     print("    " + "[Facility]".ljust(16) + "".join([f"[sku{sku_id}]".rjust(7) for sku_id in sku_id_list]))
@@ -89,7 +88,8 @@ def show_manufacture_status(env: Env) -> None:
                 continue
             facility_name = facility_info["name"]
             print(
-                f"    {facility_name.ljust(16)}sku_id = {sku_id}, manufacturing = {manufacturing_number}, unit cost = {unit_cost}")
+                f"    {facility_name.ljust(16)}sku_id = {sku_id}, manufacturing = {manufacturing_number}, "
+                f"unit cost = {unit_cost}")
 
 
 def show_status(env: Env) -> None:

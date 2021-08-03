@@ -134,7 +134,7 @@ Beyond the aforementioned spatial topology, there are many other detailed settin
 Topologies
 ----------
 
-Toy Topologie
+Toy Topology
 ^^^^^^^^^^^^^
 
 In order to give users a more intuitive explanation of this scenario, MARO provides a toy topology, which can be called a "tiny supply chain world". The configuration file path is ``maro/simulator/scenarios/supply_chain/topologies/sample/config.yml``.
